@@ -159,6 +159,7 @@
     <ClCompile Include="CubeActor.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="EffectActor.cpp" />
+    <ClCompile Include="EmitterActor.cpp" />
     <ClCompile Include="FileAnimMesh.cpp" />
     <ClCompile Include="FileAnimMeshActor.cpp" />
     <ClCompile Include="FileMesh.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="GridMeshActor.cpp" />
     <ClCompile Include="HemisphereActor.cpp" />
     <ClCompile Include="HemisphereMesh.cpp" />
+    <ClCompile Include="ItemActor.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -230,6 +232,7 @@
     <ClInclude Include="GridMeshActor.h" />
     <ClInclude Include="HemisphereActor.h" />
     <ClInclude Include="HemisphereMesh.h" />
+    <ClInclude Include="ItemActor.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshActor.h" />
@@ -256,6 +259,7 @@
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="TPVCameraActor.h" />
     <ClInclude Include="TrackingCameraActor.h" />
+    <ClInclude Include="EmitterActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LitAnimMesh.hlsli" />

@@ -40,11 +40,10 @@ MyGameScene::MyGameScene(Game* game)
 		std::vector<UINT> indices{ 0, 1, 2, 3, 4, 5 };
 		std::vector<std::vector<UINT>> anims{ indices };
 		m_balloon = std::make_unique<PlayerActor2D>(this,
-			L"src\\balloon.png", anims, 0, 0.2f, 6, 12, Renderer::Shader2DAlphaLoopPoint,
+			L"src\\balloon.png", 16.0f, anims, 0, 0.2f, 6, 12, Renderer::Shader2DAlphaLoopPoint,
 			XMFLOAT2(500.0f, 250.0f));
 		if (!m_balloon->isEnabled()) throw std::exception();
 	}
-
 
 	{
 
@@ -52,10 +51,33 @@ MyGameScene::MyGameScene(Game* game)
 		std::vector<UINT> indicesExplode{ 30, 31, 32, 33, 34, 35 };
 		std::vector<std::vector<UINT>> anims{ indices, indicesExplode };
 		m_bomb = std::make_unique<PlayerActor2D>(this,
-			L"src\\bomb.png", anims, 1, 0.2f, 6, 10, Renderer::Shader2DAlphaLoopPoint,
+			L"src\\bomb.png", 16.0f, anims, 1, 0.2f , 6, 10, Renderer::Shader2DAlphaLoopPoint,
 			XMFLOAT2(500.0f, 250.0f));
 		if (!m_bomb->isEnabled()) throw std::exception();
 	}
+
+	{
+		std::vector<UINT> indices{ 1, 0, 1, 2 };
+		std::vector<std::vector<UINT>> anims{ indices };
+		ItemActor* act = new ItemActor(this,
+			L"src\\pipo-hikarimono007.png", 16.0f, anims, 0, 0.2f, 3, 4, Renderer::Shader2DAlphaLoopPoint,
+			XMFLOAT2(600.0f, 100.0f));
+		if (!act->isEnabled()) throw std::exception();
+		m_items.push_back(act);
+
+		act = new ItemActor(this,
+			L"src\\pipo-hikarimono007.png", 16.0f, anims, 0, 0.2f, 3, 4, Renderer::Shader2DAlphaLoopPoint,
+			XMFLOAT2(80.0f, 200.0f));
+		if (!act->isEnabled()) throw std::exception();
+		m_items.push_back(act);
+
+		act = new ItemActor(this,
+			L"src\\pipo-hikarimono007.png", 16.0f, anims, 0, 0.2f, 3, 4, Renderer::Shader2DAlphaLoopPoint,
+			XMFLOAT2(300.0f, 300.0f));
+		if (!act->isEnabled()) throw std::exception();
+		m_items.push_back(act);
+	}
+	m_emitter = std::make_unique<EmitterActor>(this);
 
 	//一番最後に成功判定をとる
 	m_isRunning = true;	
@@ -63,8 +85,7 @@ MyGameScene::MyGameScene(Game* game)
 
 MyGameScene::~MyGameScene()
 {
-
-
+	releaseActors(m_items);
 }
 
 void MyGameScene::update(float deltaTime)
@@ -78,6 +99,16 @@ void MyGameScene::update(float deltaTime)
 	m_AnimSprite->update(deltaTime);
 	m_balloon->update(deltaTime);
 	m_bomb->update(deltaTime);
+
+	updateActors(m_items, deltaTime);
+
+	m_emitter->update(deltaTime);
+
+	// 削除処理
+	removeActors(m_items);
+
+	//　一時退避していたアイテムを追加
+	moveActors(m_itemsTemp, m_items);
 }
 
 void MyGameScene::draw()
@@ -91,4 +122,6 @@ void MyGameScene::draw()
 	m_AnimSprite->draw();
 	m_balloon->draw();
 	m_bomb->draw();
+
+	drawActors(m_items);
 }

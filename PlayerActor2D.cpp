@@ -3,8 +3,10 @@
 #include "Scene.h"
 #include "Renderer.h"
 #include "MyGameScene.h"
+#include "ItemActor.h"
 
 PlayerActor2D::PlayerActor2D(Scene* scene, const std::wstring & filePath,
+	float radius,
 	const std::vector<std::vector<UINT>>& indices,
 	UINT lane, float interval, UINT wNum, UINT hNum,
 	int shaderIndex,
@@ -13,6 +15,7 @@ PlayerActor2D::PlayerActor2D(Scene* scene, const std::wstring & filePath,
 	XMFLOAT2* spriteSize, bool centerFlag, bool ddsFlag)
 	: BlockAnimActor(scene, filePath, indices, lane, interval, wNum, hNum,
 		shaderIndex, pos, vel, scale, angle, angleVel, spriteSize, centerFlag, ddsFlag)
+	, m_radius(radius)
 {
 
 }
@@ -35,7 +38,27 @@ void PlayerActor2D::update(float deltaTime)
 	setVel(v);
 	simulate(deltaTime);
 
+	float w = (float)m_scene->getGame()->getWidth();
+	float h = (float)m_scene->getGame()->getHeight();
+	if (m_pos.x - m_radius < 0.0f)m_pos.x = m_radius;
+	if (m_pos.y - m_radius < 0.0f)m_pos.y = m_radius;
+	if (m_pos.x + m_radius >= w)m_pos.x = w - m_radius;
+	if (m_pos.y + m_radius >= h)m_pos.y = h - m_radius;
+
 	BlockAnimActor::update(deltaTime);
+
+	MyGameScene* scene = (MyGameScene*)m_scene;
+	std::vector<Actor*>& items = scene->getItems();
+	Circle c = getCircle();
+	for (int i = 0; i <items.size(); ++i)
+	{
+		ItemActor* item = (ItemActor*)items[i];
+		Circle ci = item->getCircle();
+		if (detectCircleCollision(c, ci))
+		{
+			item->setDead();
+		}
+	}
 }
 
 void PlayerActor2D::draw()
