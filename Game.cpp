@@ -1,0 +1,155 @@
+
+#include "Game.h"
+#include <exception>
+#include "TestScene.h"
+#include "MyGameScene.h"
+
+const float Game::FrameRate = 60.0f;
+const float Game::MaxDeltaTime = 0.05f;
+
+Game::Game()
+	: m_hwnd(nullptr)
+	, m_width(0)
+	, m_height(0)
+	, m_startTime{}
+	, m_endTime{}
+	, m_freqTime{}
+	, m_uniRand(0.0, 1.0)
+	, m_gamepad{ 0, 1, 2, 3 }
+{
+	// 乱数初期化
+	std::random_device seed;
+	m_rand = std::mt19937_64(seed());
+}
+
+Game::~Game()
+{
+	// シーンの解放
+	if (m_scene.get() != nullptr)
+	{
+		m_scene.reset();
+	}
+
+	// サウンドの解放
+	m_soundSystem.reset();
+
+	// レンダラーの解放
+	m_renderer.reset();
+}
+
+void Game::initialize(HWND hwnd, int width, int height)
+{
+	if (width <= 0 || height <= 0) throw std::exception();
+
+	m_hwnd  = hwnd;
+	m_width = width;
+	m_height = height;
+
+	// レンダラーの初期化
+	m_renderer = std::make_unique<Renderer>(this, ColorBlack);
+	if (!m_renderer->initialize()) throw std::exception();
+
+	// サウンドの初期化
+	m_soundSystem = std::make_unique<SoundSystem>();
+	if (!m_soundSystem->initialize()) throw std::exception();
+
+	// 時間計測の初期化
+	QueryPerformanceFrequency(&m_freqTime);
+	QueryPerformanceCounter(&m_startTime);
+
+	// キーボード初期化
+	m_keyboard.initialize();
+	// マウス初期化
+	m_mouse.initialize(m_hwnd);
+	// ゲームパッド初期化
+	for (DWORD id = 0; id < 4; ++id)
+	{
+		m_gamepad[id].initialize();
+	}
+
+	// シーンの初期化
+	// TestScene
+	//m_scene = std::make_unique<TestScene>(this);
+	m_scene = std::make_unique<MyGameScene>(this);
+}
+
+bool Game::loop()
+{
+	float deltaTime = 0.0f;
+	if (tick(deltaTime))
+	{
+		input();
+		update(deltaTime);
+		if (m_scene->isRunning() == false) return false;
+		draw();
+
+		//int dt = (int)std::round(deltaTime * 1000.0f);
+		//printNum(L"delta time = %d[msec]\n", dt);
+	}
+
+	return m_scene->isRunning();
+}
+
+void Game::input()
+{
+	m_keyboard.input();
+	m_mouse.input();
+	for (DWORD id = 0; id < 4; ++id)
+	{
+		m_gamepad[id].input();
+	}
+}
+
+void Game::update(float deltaTime)
+{
+	m_renderer->update(deltaTime);
+	m_soundSystem->update(deltaTime);
+	m_scene->update(deltaTime);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		m_gamepad[i].update(deltaTime);
+	}
+}
+
+void Game::draw()
+{
+	m_renderer->begin();
+
+	m_scene->draw();
+
+	m_renderer->end();
+}
+
+bool Game::tick(float& deltaTime)
+{
+	QueryPerformanceCounter(&m_endTime);
+	if (m_endTime.QuadPart - m_startTime.QuadPart == 0) return false;
+
+	deltaTime = (float)(m_endTime.QuadPart - m_startTime.QuadPart)
+		/ (float)m_freqTime.QuadPart;
+	if (deltaTime < (1.0f / (FrameRate + 1.0f))) return false;
+
+	m_startTime = m_endTime;
+	deltaTime = (deltaTime > MaxDeltaTime) ? MaxDeltaTime : deltaTime;
+	return true;
+}
+
+double Game::getRand()
+{
+	return m_uniRand(m_rand);
+}
+
+int Game::getRand(int minValue, int maxValue)
+{
+	double range = (double)(maxValue - minValue + 1);
+	return minValue + (int)(range * m_uniRand(m_rand));
+}
+
+bool Game::getBoolRand()
+{
+	return (getRand(0, 1) == 1) ? true : false;
+}
+
+
+
