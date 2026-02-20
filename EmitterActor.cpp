@@ -29,7 +29,7 @@ void EmitterActor::update(float deltaTime)
 		ItemActor* act = new ItemActor(m_scene,
 			L"src\\pipo-hikarimono007.png", 16.0f, anims, 0, 0.2f, 3, 4,
 			Renderer::Shader2DAlphaLoopPoint,
-			XMFLOAT2(640.0f, y), XMFLOAT2(-100.0f,0.0f));
+			XMFLOAT2(x, y));
 		if (!act->isEnabled()) throw std::exception();
 
 		MyGameScene* scene = (MyGameScene*)m_scene;
