@@ -3,6 +3,7 @@
 #include "SpriteActor.h"
 #include "BlockSpriteActor.h"
 #include "BlockAnimActor.h"
+#include "PlayerActor2D.h"
 
 class MyGameScene : public Scene
 {
@@ -14,9 +15,12 @@ public:
 	void draw() override;
 
 private:
+	std::unique_ptr<SpriteActor> m_bg;
 	std::unique_ptr<SpriteActor> m_sprite;
 	std::unique_ptr<BlockSpriteActor> m_blockSprite;
 	std::unique_ptr<BlockAnimActor> m_AnimSprite;
+	std::unique_ptr<PlayerActor2D> m_balloon;
+	std::unique_ptr<PlayerActor2D> m_bomb;   
 };
 
 

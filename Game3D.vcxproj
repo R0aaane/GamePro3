@@ -181,6 +181,7 @@
     <ClCompile Include="PlaneActor.cpp" />
     <ClCompile Include="PlaneMesh.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
+    <ClCompile Include="PlayerActor2D.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RoboActor.cpp" />
     <ClCompile Include="RobolinkActor.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="PlaneActor.h" />
     <ClInclude Include="PlaneMesh.h" />
     <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="PlayerActor2D.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RoboActor.h" />
     <ClInclude Include="RobolinkActor.h" />
