@@ -15,12 +15,18 @@ public:
 		XMFLOAT2* spriteSize = nullptr, bool centerFlag = true, bool ddsFlag = false);
 	virtual ~ItemActor();
 
-	void update(float deltaTime) override;
+	virtual void update(float deltaTime) override;
 	void draw() override;
 
 	Circle getCircle() { return Circle(m_pos, m_radius); }
 
+	void explode();
+	bool isExploding() const { return m_exploding; }
+
 private:
 	float m_radius;
+
+	bool m_exploding = false;
+	float explodeTimer = 0.0f;
 
 };

@@ -27,9 +27,30 @@ ItemActor:: ~ItemActor()
 void ItemActor::update(float deltaTime)
 {
 	BlockAnimActor::update(deltaTime);
+	float explodeTime = 0.5f;
+
+	if (m_exploding)
+	{
+		explodeTimer += deltaTime;
+
+		if (explodeTimer >= explodeTime)
+		{
+			setDead();
+		}
+	}
 }
 
 void ItemActor::draw()
 {
 	BlockAnimActor::draw();
+}
+
+void ItemActor::explode()
+{
+	if (m_exploding) return;
+	m_exploding = true;
+	explodeTimer = 0.0f;
+
+	// 爆発アニメーションのレーンに切り替える
+	changeLane(1);
 }

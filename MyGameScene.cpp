@@ -1,6 +1,7 @@
 #include "MyGameScene.h"
 #include "Game.h"
 #include "Renderer.h"
+#include "SoundSystem.h"
 #include <exception>
 
 MyGameScene::MyGameScene(Game* game)
@@ -56,6 +57,7 @@ MyGameScene::MyGameScene(Game* game)
 		if (!m_bomb->isEnabled()) throw std::exception();
 	}
 
+	/*
 	{
 		std::vector<UINT> indices{ 1, 0, 1, 2 };
 		std::vector<std::vector<UINT>> anims{ indices };
@@ -77,7 +79,29 @@ MyGameScene::MyGameScene(Game* game)
 		if (!act->isEnabled()) throw std::exception();
 		m_items.push_back(act);
 	}
+	*/
+
 	m_emitter = std::make_unique<EmitterActor>(this);
+
+	{
+		std::vector<FontIndex> findex;
+		findex.push_back(FontIndex(L' ', L' ' + 96, 0));
+		findex.push_back(FontIndex(L'‚ ', L'‚ ' + 190, 96));
+		findex.push_back(FontIndex(0x4E00, 0x4E00 + 20950, 96 + 190));
+		m_font = FontData(L"src\\PixelMplus12.png", findex, 256, 90, false);
+		m_stringNum = std::make_unique<StringActor>(this, L"", m_font,
+			24.0f * Ones2d, XMFLOAT2(0.0f, 70.0f), ZeroVec2d,
+			0.0f, 0.0f, Ones2d, 1.0f, 20, Renderer::Shader2DAlphaLoopPoint);
+		if (!m_stringNum->isEnabled()) throw std::exception();
+	}
+
+
+
+	SoundSystem* ss = m_game->getSoundSystem();
+	if (!ss->loadSoundFile(L"src\\maou_bgm_cyber45.mp3")) throw std::exception();
+	ss->setBGMVolume(0.5f);
+	ss->setBGM(L"src\\maou_bgm_cyber45.mp3");
+	ss->startBGM();
 
 	//ˆê”ÔÅŒã‚É¬Œ÷”»’è‚ð‚Æ‚é
 	m_isRunning = true;	
@@ -86,6 +110,7 @@ MyGameScene::MyGameScene(Game* game)
 MyGameScene::~MyGameScene()
 {
 	releaseActors(m_items);
+	releaseActors(m_itemsTemp);
 }
 
 void MyGameScene::update(float deltaTime)
@@ -103,6 +128,11 @@ void MyGameScene::update(float deltaTime)
 	updateActors(m_items, deltaTime);
 
 	m_emitter->update(deltaTime);
+
+	static wchar_t strBuff[19];
+	wsprintfW(strBuff, L"balloon num: %d", (int)m_items.size());
+	m_stringNum->setString(strBuff);
+	m_stringNum->update(deltaTime);
 
 	// íœˆ—
 	removeActors(m_items);
@@ -124,4 +154,6 @@ void MyGameScene::draw()
 	m_bomb->draw();
 
 	drawActors(m_items);
+
+	m_stringNum->draw();	
 }

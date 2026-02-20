@@ -56,7 +56,10 @@ void PlayerActor2D::update(float deltaTime)
 		Circle ci = item->getCircle();
 		if (detectCircleCollision(c, ci))
 		{
-			item->setDead();
+			if (!item->isExploding())
+			{
+				item->explode();
+			}
 		}
 	}
 }

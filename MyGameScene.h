@@ -6,6 +6,7 @@
 #include "PlayerActor2D.h"
 #include "ItemActor.h"
 #include "EmitterActor.h"
+#include "StringActor.h"
 
 class MyGameScene : public Scene
 {
@@ -32,26 +33,8 @@ private:
 
 	// ˆêŽž‘Þ”ð—p‚ÌTemp
 	std::vector<Actor*> m_itemsTemp;
+
+	std::unique_ptr<StringActor> m_stringNum;
+	FontData m_font;
+
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

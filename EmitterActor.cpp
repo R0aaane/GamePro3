@@ -19,17 +19,16 @@ void EmitterActor::update(float deltaTime)
 
 	if (key.isPressed('S'))
 	{
-		int w = m_scene->getGame()->getWidth();
 		int h = m_scene->getGame()->getHeight();
-		float x = (float)m_scene->getGame()->getRand(30, w- 30);
 		float y = (float)m_scene->getGame()->getRand(30, h - 30);
 
-		std::vector<UINT> indices{ 1, 0, 1, 2 };
-		std::vector<std::vector<UINT>> anims{ indices };
+		std::vector<UINT> indices{ 0, 1, 2 };
+		std::vector<UINT> indicesExplode{ 3, 4, 5 };
+		std::vector<std::vector<UINT>> anims{ indices, indicesExplode };
 		ItemActor* act = new ItemActor(m_scene,
-			L"src\\pipo-hikarimono007.png", 16.0f, anims, 0, 0.2f, 3, 4,
+			L"src\\balloon.png", 16.0f, anims, 0, 0.2f, 6, 12,
 			Renderer::Shader2DAlphaLoopPoint,
-			XMFLOAT2(x, y));
+			XMFLOAT2(640.0f, y), XMFLOAT2(-100.0f, 0.0f));
 		if (!act->isEnabled()) throw std::exception();
 
 		MyGameScene* scene = (MyGameScene*)m_scene;
