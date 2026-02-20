@@ -17,7 +17,7 @@ void EmitterActor::update(float deltaTime)
 {
 	const Keyboard& key = m_scene->getGame()->getKeyboard();
 
-	if (key.isPressed('S'))
+	if (key.isDown('S'))
 	{
 		int h = m_scene->getGame()->getHeight();
 		float y = (float)m_scene->getGame()->getRand(30, h - 30);

@@ -99,9 +99,12 @@ MyGameScene::MyGameScene(Game* game)
 
 	SoundSystem* ss = m_game->getSoundSystem();
 	if (!ss->loadSoundFile(L"src\\maou_bgm_cyber45.mp3")) throw std::exception();
-	ss->setBGMVolume(0.5f);
+	ss->setBGMVolume(0.1f);
 	ss->setBGM(L"src\\maou_bgm_cyber45.mp3");
 	ss->startBGM();
+
+	if (!ss->loadSoundFile(L"src\\balloonBoom.mp3")) throw std::exception();
+	ss->setSEVolume(0.1f);
 
 	//ˆê”ÔÅŒã‚É¬Œ÷”»’è‚ğ‚Æ‚é
 	m_isRunning = true;	

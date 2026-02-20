@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "MyGameScene.h"
 #include "ItemActor.h"
+#include "SoundSystem.h"
 
 PlayerActor2D::PlayerActor2D(Scene* scene, const std::wstring & filePath,
 	float radius,
@@ -59,6 +60,9 @@ void PlayerActor2D::update(float deltaTime)
 			if (!item->isExploding())
 			{
 				item->explode();
+
+				SoundSystem* ss = m_scene->getGame()->getSoundSystem();
+				ss->setSoundEffect(L"src\\balloonBoom.mp3");
 			}
 		}
 	}
